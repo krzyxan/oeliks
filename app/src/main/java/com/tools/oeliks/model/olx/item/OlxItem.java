@@ -1,6 +1,4 @@
-package com.tools.oeliks.model.olx;
-
-import java.math.BigDecimal;
+package com.tools.oeliks.model.olx.item;
 
 import lombok.ToString;
 import lombok.Value;
@@ -9,5 +7,4 @@ import lombok.Value;
 @ToString
 public class OlxItem {
     String name;
-    BigDecimal price;
 }

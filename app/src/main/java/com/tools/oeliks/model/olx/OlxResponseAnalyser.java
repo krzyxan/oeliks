@@ -1,6 +1,7 @@
 package com.tools.oeliks.model.olx;
 
-import java.math.BigDecimal;
+import com.tools.oeliks.model.olx.item.OlxItem;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,8 +17,7 @@ public class OlxResponseAnalyser {
                 final String[] item = splitData[i].split("<strong>");
                 if (item.length > 2) {
                     final String name = item[1].split("</strong>")[0];
-                    final String price = item[2].split(" zł")[0];
-                    OlxItem olxItem = new OlxItem(name, new BigDecimal(price));
+                    OlxItem olxItem = new OlxItem(name);
                     items.add(olxItem);
                 }
             }
@@ -25,5 +25,4 @@ public class OlxResponseAnalyser {
 
         return items;
     }
-
 }

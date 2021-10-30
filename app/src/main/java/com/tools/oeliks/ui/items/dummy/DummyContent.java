@@ -16,7 +16,7 @@ public class DummyContent {
     /**
      * An array of sample (dummy) items.
      */
-    public static final List<OlxSearchData> ITEMS = new ArrayList<>();
+    public static final List<OlxSearchData> ITEMS = new ArrayList<>(); //TODO remove dummy content and add dynamic generated content
 
 
     private static final int COUNT = 8;

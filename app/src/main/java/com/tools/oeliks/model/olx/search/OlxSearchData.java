@@ -24,10 +24,11 @@ public class OlxSearchData {
      * @return amount of new items available
      */
     public Integer compareAndResetItems(HashSet<OlxItem> items) {
-        this.items.retainAll(items);
-        final int newItems = items.size() - this.items.size();
+        this.items.retainAll(items); //removes all Objects from 'this.items' which are not in 'items'
 
+        final int newItems = items.size() - this.items.size();
         availableNewItems.set(newItems);
+
         this.items.clear();
         this.items.addAll(items);
 

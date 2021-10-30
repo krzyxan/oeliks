@@ -3,6 +3,7 @@ package com.tools.oeliks.model.olx.search;
 import com.tools.oeliks.model.olx.item.OlxItem;
 
 import java.util.HashSet;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import lombok.Value;
 
@@ -14,7 +15,7 @@ public class OlxSearchData {
 
     HashSet<OlxItem> items = new HashSet<>();
 
-    Integer availableNewItems = 0;
+    AtomicInteger availableNewItems = new AtomicInteger(0);
 
     /**
      * Compares previous items with new ones.
@@ -23,9 +24,14 @@ public class OlxSearchData {
      * @return amount of new items available
      */
     public Integer compareAndResetItems(HashSet<OlxItem> items) {
-        //TODO add comparing items
+        this.items.retainAll(items);
+        final int newItems = items.size() - this.items.size();
 
-        return availableNewItems;
+        availableNewItems.set(newItems);
+        this.items.clear();
+        this.items.addAll(items);
+
+        return newItems;
     }
 }
 

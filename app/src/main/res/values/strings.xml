@@ -16,4 +16,6 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="url">URL</string>
     <string name="description">Description</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
 </resources>

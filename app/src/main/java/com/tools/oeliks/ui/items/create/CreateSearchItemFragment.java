@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.EditText;
 
 import androidx.annotation.Nullable;
@@ -12,8 +13,13 @@ import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
 
 import com.tools.oeliks.R;
+import com.tools.oeliks.model.olx.search.OlxSearchData;
+import com.tools.oeliks.model.olx.search.item.OlxItem;
+import com.tools.oeliks.ui.items.OlxItemFragment;
 
 import org.jetbrains.annotations.NotNull;
+
+import java.util.HashSet;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -22,10 +28,12 @@ import org.jetbrains.annotations.NotNull;
  */
 public class CreateSearchItemFragment extends DialogFragment {
 
-    //TODO make this dialog fragment working or change to primitive way of building this shit
-
     private EditText url;
     private EditText description;
+
+    private Button ok;
+    private Button cancel;
+
 
     private CreateSearchItemFragment() {
     } //use newInstance instead
@@ -68,8 +76,19 @@ public class CreateSearchItemFragment extends DialogFragment {
     public void onViewCreated(@NotNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         // Get field from view
-        url = (EditText) view.findViewById(R.id.urlText);
-        description = (EditText) view.findViewById(R.id.descriptionText);
+        url = view.findViewById(R.id.urlText);
+        description = view.findViewById(R.id.descriptionText);
+
+        ok = view.findViewById(R.id.okButton);
+        cancel = view.findViewById(R.id.cancelButton);
+
+        ok.setOnClickListener((l) -> {
+            onActionOkButton();
+            getDialog().dismiss();
+        });
+
+        cancel.setOnClickListener((l) -> getDialog().dismiss());
+
         // Fetch arguments from bundle and set title
         getDialog().setTitle("Add new search");
         getDialog().setContentView(this.getView());
@@ -77,5 +96,22 @@ public class CreateSearchItemFragment extends DialogFragment {
         url.requestFocus();
         getDialog().getWindow().setSoftInputMode(
                 WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        getDialog().getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+    }
+
+    private void onActionOkButton() {
+        HashSet<OlxItem> items = new HashSet<>();
+        items.add(new OlxItem("ps5")); //TODO add listener with Analyser
+        OlxSearchData searchItem = new OlxSearchData(url.getText().toString(), description.getText().toString());
+        searchItem.compareAndResetItems(items);
+
+        OlxItemFragment.getOlxAdapter().addItem(searchItem);
+        OlxItemFragment.getOlxAdapter().notifyDataSetChanged();
     }
 }

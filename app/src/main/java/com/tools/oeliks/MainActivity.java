@@ -19,6 +19,7 @@ import com.tools.oeliks.model.olx.analyser.OlxResponseAnalyser;
 import com.tools.oeliks.model.olx.search.OlxSearchData;
 import com.tools.oeliks.model.olx.search.item.OlxItem;
 import com.tools.oeliks.ui.items.OlxItemFragment;
+import com.tools.oeliks.ui.items.create.CreateSearchItemFragment;
 
 import java.io.IOException;
 import java.util.HashSet;
@@ -39,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
 
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(view -> {
-            new Thread(this::addOlxItem).start();
+            new Thread(this::openAddItemDialog).start();
         });
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
@@ -53,6 +54,11 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
+    }
+
+    private void openAddItemDialog() {
+        final CreateSearchItemFragment dialogFragment = CreateSearchItemFragment.newInstance();
+        dialogFragment.show(getSupportFragmentManager(), "CreateSearchItemDialogFragment");
     }
 
     private void addOlxItem() {

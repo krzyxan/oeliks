@@ -1,4 +1,4 @@
-package com.tools.oeliks.model.olx.item;
+package com.tools.oeliks.model.olx.search.item;
 
 import lombok.EqualsAndHashCode;
 import lombok.ToString;

@@ -12,34 +12,21 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.tools.oeliks.R;
-import com.tools.oeliks.ui.items.dummy.DummyContent;
+
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 /**
  * A fragment representing a list of Items.
  */
+@NoArgsConstructor
 public class OlxItemFragment extends Fragment {
 
-    // TODO: Customize parameter argument names
     private static final String ARG_COLUMN_COUNT = "column-count";
-    // TODO: Customize parameters
     private int mColumnCount = 1;
 
-    /**
-     * Mandatory empty constructor for the fragment manager to instantiate the
-     * fragment (e.g. upon screen orientation changes).
-     */
-    public OlxItemFragment() {
-    }
-
-    // TODO: Customize parameter initialization
-    @SuppressWarnings("unused")
-    public static OlxItemFragment newInstance(int columnCount) {
-        OlxItemFragment fragment = new OlxItemFragment();
-        Bundle args = new Bundle();
-        args.putInt(ARG_COLUMN_COUNT, columnCount);
-        fragment.setArguments(args);
-        return fragment;
-    }
+    @Getter
+    private static final OlxRecyclerViewAdapter olxAdapter = new OlxRecyclerViewAdapter(); //TODO try to not using static
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -64,7 +51,7 @@ public class OlxItemFragment extends Fragment {
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            recyclerView.setAdapter(new OlxRecyclerViewAdapter(DummyContent.ITEMS));
+            recyclerView.setAdapter(olxAdapter);
         }
         return view;
     }

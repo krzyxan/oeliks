@@ -1,6 +1,6 @@
-package com.tools.oeliks.model.olx;
+package com.tools.oeliks.model.olx.analyser;
 
-import com.tools.oeliks.model.olx.item.OlxItem;
+import com.tools.oeliks.model.olx.search.item.OlxItem;
 
 import java.util.ArrayList;
 import java.util.List;

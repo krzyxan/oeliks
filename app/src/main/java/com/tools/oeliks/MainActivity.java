@@ -15,9 +15,13 @@ import androidx.navigation.ui.NavigationUI;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.tools.oeliks.model.http.HttpRequester;
-import com.tools.oeliks.model.olx.OlxResponseAnalyser;
+import com.tools.oeliks.model.olx.analyser.OlxResponseAnalyser;
+import com.tools.oeliks.model.olx.search.OlxSearchData;
+import com.tools.oeliks.model.olx.search.item.OlxItem;
+import com.tools.oeliks.ui.items.OlxItemFragment;
 
 import java.io.IOException;
+import java.util.HashSet;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -35,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
 
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(view -> {
-            new Thread(this::doBasicOlxRequest).start();
+            new Thread(this::addOlxItem).start();
         });
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
@@ -49,6 +53,16 @@ public class MainActivity extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
+    }
+
+    private void addOlxItem() {
+        HashSet<OlxItem> items = new HashSet<>();
+        items.add(new OlxItem("ps5"));
+        OlxSearchData searchItem = new OlxSearchData("url-s", "first ps5");
+        searchItem.compareAndResetItems(items);
+
+        OlxItemFragment.getOlxAdapter().addItem(searchItem);
+        runOnUiThread(() -> OlxItemFragment.getOlxAdapter().notifyDataSetChanged());
     }
 
     private void doBasicOlxRequest() {

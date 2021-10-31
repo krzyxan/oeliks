@@ -4,6 +4,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
@@ -11,21 +12,27 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.tools.oeliks.R;
 import com.tools.oeliks.model.olx.search.OlxSearchData;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import lombok.ToString;
+import lombok.Getter;
+import lombok.Setter;
 
 /**
  * {@link RecyclerView.Adapter} that can display a {@link OlxSearchData}.
- * TODO: Replace the implementation with code for your data type.
  */
 public class OlxRecyclerViewAdapter extends RecyclerView.Adapter<OlxRecyclerViewAdapter.ViewHolder> {
 
-    private final List<OlxSearchData> mValues;
+    private final List<OlxSearchData> searchItems = new ArrayList<>();
 
-    public OlxRecyclerViewAdapter(List<OlxSearchData> items) {
-        mValues = items;
+    public void addItem(OlxSearchData searchItem) {
+        searchItems.add(searchItem);
     }
+
+    public void removeSearchItem(OlxSearchData searchItem) {
+        searchItems.remove(searchItem);
+    }
+
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -36,31 +43,49 @@ public class OlxRecyclerViewAdapter extends RecyclerView.Adapter<OlxRecyclerView
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        holder.mItem = mValues.get(position);
-        String buttonText = holder.mItem.getAvailableNewItems() + " NEW ITEMS";
-        holder.itemSearchDescription.setText(holder.mItem.getDescription());
-        holder.newItemsButton.setText(buttonText);
+        holder.setMItem(searchItems.get(position));
+        holder.getItemSearchDescription().setText(holder.mItem.getDescription());
+
+        final String buttonText = holder.mItem.getAvailableNewItems() + " NEW ITEMS";
+        holder.getNewItemsButton().setText(buttonText);
     }
 
     @Override
     public int getItemCount() {
-        return mValues.size();
+        return searchItems.size();
     }
 
-    @ToString
+    @Getter
+    @Setter
     public class ViewHolder extends RecyclerView.ViewHolder {
-        public final View mView;
-        public final TextView itemSearchDescription;
-        public final Button newItemsButton;
-        public OlxSearchData mItem;
+        private final View mView;
+        private final TextView itemSearchDescription;
+        private final Button newItemsButton;
+        private final ImageButton editItem;
+        private final ImageButton deleteItem;
+
+        private OlxSearchData mItem;
 
         public ViewHolder(View view) {
             super(view);
             mView = view;
             itemSearchDescription = (TextView) view.findViewById(R.id.itemSearchDescription);
             newItemsButton = (Button) view.findViewById(R.id.newItemsButton);
-            //TODO add edit action
-            //TODO add delete action
+            editItem = (ImageButton) view.findViewById(R.id.editButton);
+            deleteItem = (ImageButton) view.findViewById(R.id.deleteButton);
+
+            editItem.setOnClickListener((l) -> onActionEditItem());
+            deleteItem.setOnClickListener((l) -> onActionDeleteItem());
+        }
+
+        private void onActionEditItem() {
+            //TODO add edit action dialog
+        }
+
+        private void onActionDeleteItem() {
+            //TODO add confirm delete dialog
+            OlxItemFragment.getOlxAdapter().removeSearchItem(mItem);
+            OlxItemFragment.getOlxAdapter().notifyDataSetChanged();
         }
     }
 }

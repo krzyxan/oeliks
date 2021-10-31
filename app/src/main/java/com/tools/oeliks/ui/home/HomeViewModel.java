@@ -8,6 +8,7 @@ public class HomeViewModel extends ViewModel {
 
     private MutableLiveData<String> mText;
 
+        //TODO delete
     public HomeViewModel() {
         mText = new MutableLiveData<>();
         mText.setValue("This is home fragment");

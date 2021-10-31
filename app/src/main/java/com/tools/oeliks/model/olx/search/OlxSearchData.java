@@ -1,6 +1,6 @@
 package com.tools.oeliks.model.olx.search;
 
-import com.tools.oeliks.model.olx.item.OlxItem;
+import com.tools.oeliks.model.olx.search.item.OlxItem;
 
 import java.util.HashSet;
 import java.util.concurrent.atomic.AtomicInteger;

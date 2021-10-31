@@ -1,6 +1,6 @@
 package com.tools.oeliks.olx.search;
 
-import com.tools.oeliks.model.olx.item.OlxItem;
+import com.tools.oeliks.model.olx.search.item.OlxItem;
 import com.tools.oeliks.model.olx.search.OlxSearchData;
 
 import org.junit.Test;

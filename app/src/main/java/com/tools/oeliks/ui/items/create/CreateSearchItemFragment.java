@@ -14,12 +14,9 @@ import androidx.fragment.app.Fragment;
 
 import com.tools.oeliks.R;
 import com.tools.oeliks.model.olx.search.OlxSearchData;
-import com.tools.oeliks.model.olx.search.item.OlxItem;
 import com.tools.oeliks.ui.items.OlxItemFragment;
 
 import org.jetbrains.annotations.NotNull;
-
-import java.util.HashSet;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -31,10 +28,6 @@ public class CreateSearchItemFragment extends DialogFragment {
     private EditText url;
     private EditText description;
 
-    private Button ok;
-    private Button cancel;
-
-
     private CreateSearchItemFragment() {
     } //use newInstance instead
 
@@ -44,7 +37,6 @@ public class CreateSearchItemFragment extends DialogFragment {
      *
      * @return A new instance of fragment CreateSearchItemFragment.
      */
-    // TODO: Rename and change types and number of parameters
     public static CreateSearchItemFragment newInstance() {
         CreateSearchItemFragment fragment = new CreateSearchItemFragment();
 //        Bundle args = new Bundle();
@@ -78,23 +70,20 @@ public class CreateSearchItemFragment extends DialogFragment {
         // Get field from view
         url = view.findViewById(R.id.urlText);
         description = view.findViewById(R.id.descriptionText);
-
-        ok = view.findViewById(R.id.okButton);
-        cancel = view.findViewById(R.id.cancelButton);
+        final Button ok = view.findViewById(R.id.okButton);
+        final Button cancel = view.findViewById(R.id.cancelButton);
 
         ok.setOnClickListener((l) -> {
             onActionOkButton();
-            getDialog().dismiss();
+            this.dismiss();
         });
 
-        cancel.setOnClickListener((l) -> getDialog().dismiss());
+        cancel.setOnClickListener((l) -> this.dismiss());
 
-        // Fetch arguments from bundle and set title
-        getDialog().setTitle("Add new search");
-        getDialog().setContentView(this.getView());
-        // Show soft keyboard automatically and request focus to field
         url.requestFocus();
-        getDialog().getWindow().setSoftInputMode(
+        getDialog()
+                .getWindow()
+                .setSoftInputMode(
                 WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
     }
 
@@ -102,15 +91,14 @@ public class CreateSearchItemFragment extends DialogFragment {
     public void onStart() {
         super.onStart();
 
-        getDialog().getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        getDialog()
+                .getWindow()
+                .setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
     }
 
     private void onActionOkButton() {
-        HashSet<OlxItem> items = new HashSet<>();
-        items.add(new OlxItem("ps5")); //TODO add listener with Analyser
+        //TODO add listener with Analyser
         OlxSearchData searchItem = new OlxSearchData(url.getText().toString(), description.getText().toString());
-        searchItem.compareAndResetItems(items);
-
         OlxItemFragment.getOlxAdapter().addItem(searchItem);
         OlxItemFragment.getOlxAdapter().notifyDataSetChanged();
     }

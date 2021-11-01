@@ -10,7 +10,7 @@ import lombok.Value;
 @Value
 public class OlxSearchData {
 
-    String url;
+    String url; //TODO add url check
     String description;
 
     HashSet<OlxItem> items = new HashSet<>();

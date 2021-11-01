@@ -1,5 +1,6 @@
 package com.tools.oeliks.ui.items;
 
+import android.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -69,10 +70,11 @@ public class OlxRecyclerViewAdapter extends RecyclerView.Adapter<OlxRecyclerView
         public ViewHolder(View view) {
             super(view);
             mView = view;
-            itemSearchDescription = (TextView) view.findViewById(R.id.itemSearchDescription);
-            newItemsButton = (Button) view.findViewById(R.id.newItemsButton);
-            editItem = (ImageButton) view.findViewById(R.id.editButton);
-            deleteItem = (ImageButton) view.findViewById(R.id.deleteButton);
+
+            itemSearchDescription = view.findViewById(R.id.itemSearchDescription);
+            newItemsButton = view.findViewById(R.id.newItemsButton);
+            editItem = view.findViewById(R.id.editButton);
+            deleteItem = view.findViewById(R.id.deleteButton);
 
             editItem.setOnClickListener((l) -> onActionEditItem());
             deleteItem.setOnClickListener((l) -> onActionDeleteItem());
@@ -83,9 +85,15 @@ public class OlxRecyclerViewAdapter extends RecyclerView.Adapter<OlxRecyclerView
         }
 
         private void onActionDeleteItem() {
-            //TODO add confirm delete dialog
-            OlxItemFragment.getOlxAdapter().removeSearchItem(mItem);
-            OlxItemFragment.getOlxAdapter().notifyDataSetChanged();
+            new AlertDialog.Builder(mView.getContext()).setTitle("Confirm delete")
+                    .setMessage("Would you like to delete " + mItem.getDescription() + "?")
+                    .setPositiveButton("OK", (dialog, id) -> {
+                        OlxItemFragment.getOlxAdapter().removeSearchItem(mItem);
+                        OlxItemFragment.getOlxAdapter().notifyDataSetChanged();
+                    })
+                    .setNegativeButton("Cancel", (dialog, id) -> dialog.cancel())
+                    .create()
+                    .show();
         }
     }
 }

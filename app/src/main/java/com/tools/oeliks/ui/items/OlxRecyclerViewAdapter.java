@@ -13,6 +13,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.tools.oeliks.R;
 import com.tools.oeliks.model.olx.search.OlxSearchData;
 
+import org.jetbrains.annotations.NotNull;
+
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,8 +25,9 @@ import lombok.Setter;
 /**
  * {@link RecyclerView.Adapter} that can display a {@link OlxSearchData}.
  */
-public class OlxRecyclerViewAdapter extends RecyclerView.Adapter<OlxRecyclerViewAdapter.ViewHolder> {
+public class OlxRecyclerViewAdapter extends RecyclerView.Adapter<OlxRecyclerViewAdapter.OlxItemViewHolder> {
 
+    @Getter
     private final List<OlxSearchData> searchItems = new ArrayList<>();
 
     public void addItem(OlxSearchData searchItem) {
@@ -35,19 +39,20 @@ public class OlxRecyclerViewAdapter extends RecyclerView.Adapter<OlxRecyclerView
     }
 
 
+    @NotNull
     @Override
-    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public OlxItemViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.fragment_item, parent, false);
-        return new ViewHolder(view);
+        return new OlxItemViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(final ViewHolder holder, int position) {
+    public void onBindViewHolder(final OlxItemViewHolder holder, int position) {
         holder.setMItem(searchItems.get(position));
-        holder.getItemSearchDescription().setText(holder.mItem.getDescription());
+        holder.getItemSearchDescription().setText(holder.getMItem().getDescription());
 
-        final String buttonText = holder.mItem.getAvailableNewItems() + " NEW ITEMS";
+        final String buttonText = holder.getMItem().getAvailableNewItems() + " NEW ITEMS";
         holder.getNewItemsButton().setText(buttonText);
     }
 
@@ -58,7 +63,7 @@ public class OlxRecyclerViewAdapter extends RecyclerView.Adapter<OlxRecyclerView
 
     @Getter
     @Setter
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public class OlxItemViewHolder extends RecyclerView.ViewHolder implements Serializable {
         private final View mView;
         private final TextView itemSearchDescription;
         private final Button newItemsButton;
@@ -67,7 +72,7 @@ public class OlxRecyclerViewAdapter extends RecyclerView.Adapter<OlxRecyclerView
 
         private OlxSearchData mItem;
 
-        public ViewHolder(View view) {
+        public OlxItemViewHolder(View view) {
             super(view);
             mView = view;
 

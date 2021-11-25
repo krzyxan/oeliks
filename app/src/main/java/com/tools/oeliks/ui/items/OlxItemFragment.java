@@ -6,12 +6,24 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.tools.oeliks.R;
+import com.tools.oeliks.model.olx.search.OlxSearchData;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,18 +34,29 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class OlxItemFragment extends Fragment {
 
-    private static final String ARG_COLUMN_COUNT = "column-count";
-    private int mColumnCount = 1;
 
     @Getter
-    private static final OlxRecyclerViewAdapter olxAdapter = new OlxRecyclerViewAdapter(); //TODO try to not using static
+    private static OlxRecyclerViewAdapter olxAdapter = new OlxRecyclerViewAdapter(); //TODO try to not using static
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (getArguments() != null) {
-            mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
+
+        try (final FileInputStream fis = requireContext().openFileInput("olxItems");
+             final ObjectInputStream objectInputStream = new ObjectInputStream(fis)) {
+
+            olxAdapter.getSearchItems().clear();
+            if (objectInputStream.available() > 0) {
+                final JSONArray jsonArray = new JSONArray(objectInputStream.readUTF());
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    final JSONObject jsonObject = jsonArray.getJSONObject(i);
+                    final OlxSearchData item = new OlxSearchData(jsonObject);
+                    olxAdapter.addItem(item);
+                }
+            }
+        } catch (IOException | JSONException e) {
+            e.printStackTrace();
         }
     }
 
@@ -46,13 +69,36 @@ public class OlxItemFragment extends Fragment {
         if (view instanceof RecyclerView) {
             Context context = view.getContext();
             RecyclerView recyclerView = (RecyclerView) view;
-            if (mColumnCount <= 1) {
-                recyclerView.setLayoutManager(new LinearLayoutManager(context));
-            } else {
-                recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
-            }
+            recyclerView.setLayoutManager(new LinearLayoutManager(context));
             recyclerView.setAdapter(olxAdapter);
         }
         return view;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        try (final FileOutputStream fos = requireContext().openFileOutput("olxItems", Context.MODE_PRIVATE);
+             final ObjectOutputStream objectStream = new ObjectOutputStream(fos)) {
+
+            final JSONArray jsonArray = new JSONArray();
+            olxAdapter.getSearchItems().forEach(item -> {
+                try {
+                    jsonArray.put(item.toJSONObject());
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            });
+
+            objectStream.writeUTF(jsonArray.toString());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

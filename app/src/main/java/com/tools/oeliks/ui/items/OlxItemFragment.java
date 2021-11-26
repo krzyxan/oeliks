@@ -45,7 +45,9 @@ public class OlxItemFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         final Intent intent = new Intent(requireContext(), OlxRequestingService.class);
-        OlxRequestingService.enqueueWork(this.requireContext(), OlxRequestingService.class, OlxRequestingService.JOB_ID, intent);
+        OlxRequestingService.enqueueWork(this.requireContext(), OlxRequestingService.class, OlxRequestingService.JOB_ID, intent); //TODO improve
+
+
 
         try (final FileInputStream fis = requireContext().openFileInput("olxItems");
              final ObjectInputStream objectInputStream = new ObjectInputStream(fis)) {

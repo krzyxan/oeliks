@@ -1,6 +1,7 @@
 package com.tools.oeliks.ui.items;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.tools.oeliks.R;
 import com.tools.oeliks.model.olx.search.OlxSearchData;
+import com.tools.oeliks.model.olx.service.OlxRequestingService;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -42,6 +44,8 @@ public class OlxItemFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        final Intent intent = new Intent(requireContext(), OlxRequestingService.class);
+        OlxRequestingService.enqueueWork(this.requireContext(), OlxRequestingService.class, OlxRequestingService.JOB_ID, intent);
 
         try (final FileInputStream fis = requireContext().openFileInput("olxItems");
              final ObjectInputStream objectInputStream = new ObjectInputStream(fis)) {
@@ -100,5 +104,12 @@ public class OlxItemFragment extends Fragment {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+
     }
 }
